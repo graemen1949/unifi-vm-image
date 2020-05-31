@@ -1,0 +1,32 @@
+{
+  "variables": {
+    "api_token": "{{env `DO_TOKEN`}}"
+  },
+  "builders": [
+    {
+      "type": "digitalocean",
+      "api_token": "{{user `api_token`}}",
+      "image": "ubuntu-20-04-x64",
+      "region": "sgp1",
+      "size": "512mb",
+      "ssh_username": "root"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo apt-get update && sudo apt-get -y upgrade", "touch packer_was_here"]
+    },
+    {
+      "type":        "file",
+      "source":      "unifi-5.12.72.sh",
+      "destination": "/tmp/unifi-5.12.72.sh"
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "chmod u+x /tmp/unifi-5.12.72.sh",
+        "/tmp/unifi-5.12.72.sh --skip"]
+    }
+  ]
+}
